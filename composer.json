@@ -1,0 +1,36 @@
+{
+  "name": "mfn/laravel-view-obj",
+  "description": "Laravel object based view templates",
+  "type": "library",
+  "keywords": [
+    "laravel",
+    "view",
+    "object",
+    "template"
+  ],
+  "homepage": "http://github.com/mfn/php-laravel-view-obj",
+  "authors": [
+    {
+      "name": "Markus Fischer",
+      "email": "markus@fischer.name",
+      "role": "Developer"
+    }
+  ],
+  "support": {
+    "issues": "https://github.com/mfn/php-laravel-view-obj/issues"
+  },
+  "license": "MIT",
+  "require": {
+    "php": ">=5.5",
+    "illuminate/support": "5.0.x|5.1.x",
+    "illuminate/view": "5.0.x|5.1.x"
+  },
+  "autoload": {
+    "psr-4": {
+      "Mfn\\Laravel\\ViewObj\\": "src/"
+    },
+    "files": [
+      "src/helpers.php"
+    ]
+  }
+}
