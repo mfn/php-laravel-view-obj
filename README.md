@@ -19,14 +19,24 @@ Publish the configuration:
 
 # Documentation
 
-Turns an objects class hierarchy into a path for a view template, i.e. if you
-want to "view" an object of type `App\Article`, the provided helper `view_obj()`
-will try to render the view `_view_obj.App.Article.default` which usually maps
-to your path `<PROJECT_ROOT>/resources/views/_view_obj/App/Article/default.php`
+This package leverages an objects class hierarchy to turn it into a path for a
+view template, i.e. if you want to "view" an object of type `App\Article`, the
+provided helper `view_obj()` will try to render the view
+`_view_obj.App.Article.default` which usually maps to your path
+`<PROJECT_ROOT>/resources/views/_view_obj/App/Article/default.php`
 (or `default.blade.php`). The object itself will be passed to that view as `$obj`.
 
 Conceptually you can think of it as a partial, where the name of the view is
-derived from the objects class hierarchy.
+derived from the objects class hierarchy. Views itself can be hierarchically
+organized by virtue of the filesystem, so can classes. This package re-uses that
+information for views.
+
+The idea is that an object has different representations, depending on the
+context. By default the context is "default" (...), but if you want to render
+`$article` as part of a list, you create an appropriate list template and call
+the helper with `@view_obj($article, 'list')`. So, ideally, all variants how
+`App/Article` is going to be represented in the system are in this one
+directory, `_view_obj/App/Article/`. 
 
 The signature of the helper is:
 
@@ -55,9 +65,20 @@ i.e. you can omit the `$template` for the default case.
 
 ## Examples
 
-Most simple case, show the default view of the object. Assuming the class
-`App\Article` we first create the default template in
+In the most simple case, show the default view of the object. Assuming the class
+`App\Article`, we first create the default template in
 `resources/views/_view_obj/App/Article/default.blade.php`:
+
+- `resources/views/` is the default location for Laravel applications
+- `_view_obj/` is the (default) configured "prefix" for all view templates
+  derived from objects
+- `App/Article/` reflects the class hierarchy
+- `default` is the "default" when showing an object without specifying it's
+  template.
+- `.blade.php` is just the default Laravel extensin for Blade; could be `.php`
+  for pure PHP templates.
+
+Example of such a view:
 
 *Note: the object we render always gets passed as `$obj`*
 ```HTML
@@ -69,12 +90,12 @@ Most simple case, show the default view of the object. Assuming the class
 </article>
 ```
 
-Anywhere in a view where you pass on the article you can invoke the view with:
+Anywhere in a view where you pass on the article, you can invoke the view with:
 ```PHP
 @view_obj($article)
 ```
 
-Assuming now you want to render the article as part of a list, i.e. you have an
+We now assume you want to render the article as part of a list, i.e. you have an
 array of articles. We first create a `list` template for the article in
 `resources/views/_view_obj/App/Article/list.blade.php`. We usually only display
 the link/title in the list:
@@ -90,9 +111,9 @@ the link/title in the list:
 Now using the `list` view:
 
 ```HTML
-<?php foreach ($articles as $article) { ?>
-@view_obj($article, 'list');
-<?php } ?>
+@foreach ($articles as $article)
+    @view_obj($article, 'list');
+@endforeach
 ```
 
 # Configuration
