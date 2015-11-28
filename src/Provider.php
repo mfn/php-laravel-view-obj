@@ -47,9 +47,7 @@ class Provider extends ServiceProvider
             ->getCompiler();
 
         $blade->directive('view_obj', function ($expression) {
-            # Implementation note: `view_obj()` returns a `View` which
-            # implements `__toString()`, that's why this works
-            return "<?php echo view_obj{$expression}; ?>";
+            return "<?php echo view_obj{$expression}->render(); ?>";
         });
     }
 
